@@ -12,11 +12,14 @@ import {BrowserRouter as Router, Route, Link, Car} from 'react-router-dom'
 
 class App extends Component {
 
-
   chonMenu = (e, { name }) => {
     this.setState({ dangChonGi: name});
-    // alert(name)
   }
+
+  // chonMenu = (e, { name }) => {
+  //   this.setState({ dangChonGi: name});
+  //   // alert(name)
+  // }
 
 
   render() {

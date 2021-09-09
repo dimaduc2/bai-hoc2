@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Grid, Card, Image, Popup, Button, Dropdown, Form } from 'semantic-ui-react'
+import { Grid, Card, Image, Popup, Button, Dropdown, Form, Table } from 'semantic-ui-react'
 import axios from 'axios';
 
 const options = [
@@ -15,27 +15,38 @@ const options = [
 class ThanhPho extends Component {
 
   state = {
-    
+    thanhPho:[],
   }
 
   
   
   componentDidMount(){
-    axios.get('http://localhost:5600/baiHoc2/thanhPho')
+    // axios.get('http://localhost:5600/baiHoc2/thanhPho')
+    axios.get('http://localhost:5600/baiHoc2/thanhPho?nameThanhPho=all')
+
+    .then(res => {
+      if(res.data==='Không kết nối với MongoDB'){
+        this.setState({coLoi: res.data});
+      }
+      else{
+        this.setState({thanhPho: res.data});
+      }
+    })
   }
+
 
   
   render() {
-    const {  } = this.state
+    const { thanhPho,  } = this.state
     
     return (
     
       <div>
         Thành Phố
-        {/* <Dropdown placeholder='Skills' fluid multiple selection options={options} /> */}
+        <br/><br/>
 
         <Dropdown
-          search
+          // search
           selection
           multiple
           options={options}
@@ -44,6 +55,37 @@ class ThanhPho extends Component {
           // onChange={this.onChangeThemNgayMoi}
           />
 
+          <br/><br/>
+
+
+        {thanhPho
+          ?
+          <Table celled selectable inverted>
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell>Lục Địa</Table.HeaderCell>
+                <Table.HeaderCell>Nước</Table.HeaderCell>
+                <Table.HeaderCell>Tên</Table.HeaderCell>
+                <Table.HeaderCell>Cờ</Table.HeaderCell>
+                
+              </Table.Row>
+            </Table.Header>
+            
+            {thanhPho.map((moiThanhPho, index)=>
+              <Table.Body>
+                <Table.Row >
+                  <Table.Cell>{moiThanhPho.LucDia}</Table.Cell>
+                  <Table.Cell>{moiThanhPho.Nuoc}</Table.Cell>
+                  <Table.Cell>{moiThanhPho.Ten}</Table.Cell>
+                  <Table.Cell><Image src={moiThanhPho.Co} width={100}></Image></Table.Cell>
+                </Table.Row>
+              </Table.Body>
+            )}
+
+
+          </Table>
+          :null
+        }
 
       </div>
     
