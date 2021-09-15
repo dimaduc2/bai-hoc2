@@ -3,27 +3,24 @@ import { Grid, Card, Image, Popup, Button, Dropdown, Form, Table } from 'semanti
 import axios from 'axios';
 
 const options = [
-  { key: 1, text: 'Thứ hai', value: 'Thứ hai' },
-  { key: 2, text: 'Thứ ba', value: 'Thứ ba' },
-  { key: 3, text: 'Thứ tư', value: 'Thứ tư' },
-  { key: 4, text: 'Thứ năm', value: 'Thứ năm' },
-  { key: 5, text: 'Thứ sáu', value: 'Thứ sáu' },
-  { key: 6, text: 'Thứ bảy', value: 'Thứ bảy' },
-  { key: 7, text: 'Chủ nhật', value: 'Chủ nhật' },
+  { key: 1, text: 'All', value: 'All' },
+  { key: 2, text: 'Châu Á', value: 'Châu Á' },
+  { key: 3, text: 'Châu Âu', value: 'Châu Âu' },
+  { key: 4, text: 'Châu Mỹ', value: 'Châu Mỹ' },
 ]
 
 class ThanhPho extends Component {
 
   state = {
     thanhPho:[],
+    chonThanhPho:'All',
   }
 
   
   
   componentDidMount(){
     // axios.get('http://localhost:5600/baiHoc2/thanhPho')
-    axios.get('http://localhost:5600/baiHoc2/thanhPho?nameThanhPho=all')
-
+    axios.get('http://localhost:5600/baiHoc2/thanhPho?nameThanhPho=All')
     .then(res => {
       if(res.data==='Không kết nối với MongoDB'){
         this.setState({coLoi: res.data});
@@ -34,10 +31,24 @@ class ThanhPho extends Component {
     })
   }
 
+  onChangeChonThanhPho = (e, { value }) => {
+    this.setState({chonThanhPho: value})
+    axios.get('http://localhost:5600/baiHoc2/thanhPho/TP?chonThanhPhoName='+value)
+    // .then(res => {
+    //   if(res.data==='Không kết nối với MongoDB'){
+    //     this.setState({coLoi: res.data});
+    //   }
+    //   else{
+    //     this.setState({chonThanhPho: res.data});
+    //   }
+    // })
+    
+  }
+
 
   
   render() {
-    const { thanhPho,  } = this.state
+    const { thanhPho,  chonThanhPho} = this.state
     
     return (
     
@@ -48,14 +59,20 @@ class ThanhPho extends Component {
         <Dropdown
           // search
           selection
-          multiple
+          
           options={options}
           placeholder='Choose an option'
-          // value={this.state.ngayAdd}
-          // onChange={this.onChangeThemNgayMoi}
-          />
 
-          <br/><br/>
+
+          value={this.state.chonThanhPho}
+          onChange={this.onChangeChonThanhPho}
+        />
+
+        <br/><br/>
+
+        {chonThanhPho}
+
+        <br/><br/>
 
 
         {thanhPho
@@ -66,6 +83,7 @@ class ThanhPho extends Component {
                 <Table.HeaderCell>Lục Địa</Table.HeaderCell>
                 <Table.HeaderCell>Nước</Table.HeaderCell>
                 <Table.HeaderCell>Tên</Table.HeaderCell>
+                <Table.HeaderCell>Số người</Table.HeaderCell>
                 <Table.HeaderCell>Cờ</Table.HeaderCell>
                 
               </Table.Row>
@@ -77,6 +95,7 @@ class ThanhPho extends Component {
                   <Table.Cell>{moiThanhPho.LucDia}</Table.Cell>
                   <Table.Cell>{moiThanhPho.Nuoc}</Table.Cell>
                   <Table.Cell>{moiThanhPho.Ten}</Table.Cell>
+                  <Table.Cell>{moiThanhPho.SoNguoi}</Table.Cell>
                   <Table.Cell><Image src={moiThanhPho.Co} width={100}></Image></Table.Cell>
                 </Table.Row>
               </Table.Body>
